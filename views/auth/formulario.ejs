@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Insertar Producto</title>
+    <link rel="stylesheet" href="Css/app.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Insertar Nuevo Producto</h2>
+            <form id="productForm">
+                <label for="product_id">ID:</label>
+                <input type="number" id="product_id" name="product_id" required><br>
+
+                <label for="product_title">Título:</label>
+                <input type="text" id="product_title" name="product_title" required><br>
+
+                <label for="product_price">Precio:</label>
+                <input type="number" step="0.01" id="product_price" name="product_price" required><br>
+
+                <label for="product_image">Imagen:</label>
+                <select id="product_image" name="product_image" required>
+                    <option value="a1.jpg">img1.jpg</option>
+                    <option value="areo.jpg">img2.jpg</option>
+                    <option value="suit1.jpg">img3.jpg</option>
+                    <option value="suit2.jpg">img4.jpg</option>
+                    <option value="suit3.jpg">img3.jpg</option>
+                    <option value="tommy hilf1.jpg">img4.jpg</option>
+                    <option value="ucb1.jpg">img4.jpg</option>
+                </select><br>
+
+                <label for="product_keywords">Palabras clave:</label>
+                <input type="text" id="product_keywords" name="product_keywords" required><br>
+
+                <input type="submit" value="Insertar Producto">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function soapRequest() {
+            const product_id = document.getElementById('product_id').value;
+            const product_title = document.getElementById('product_title').value;
+            const product_price = document.getElementById('product_price').value;
+            const product_image = document.getElementById('product_image').value;
+            const product_keywords = document.getElementById('product_keywords').value;
+
+            const soapMessage = `<?xml version="1.0" encoding="utf-8"?>
+                <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                               xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soap:Body>
+                        <insertProduct xmlns="urn:claseServidorwsdl">
+                            <product_id>${product_id}</product_id>
+                            <product_title>${product_title}</product_title>
+                            <product_price>${product_price}</product_price>
+                            <product_image>${product_image}</product_image>
+                            <product_keywords>${product_keywords}</product_keywords>
+                        </insertProduct>
+                    </soap:Body>
+                </soap:Envelope>`;
+
+            fetch("https://back.itzitacuaro.edu.mx/equipo4/servidor.php?wsdl", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/xml'
+                },
+                body: soapMessage
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('productForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                soapRequest();
+            });
+        });
+
+    </script>
+</body>
+</html>

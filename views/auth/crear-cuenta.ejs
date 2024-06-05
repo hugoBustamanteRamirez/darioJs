@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/public/css/login.css">
+
+
+    
+</head>
+<body>
+   
+    <h1 class="nombre-pagina">Crear Cuenta</h1>
+<p class="descripcion-pagina">Llena el siguiente el formulario para crear una cuenta</p>
+
+
+
+<form class="formulario" method="POST" action="/validar">
+  
+    <label for="nom_user">Nombre:</label><br>
+
+    <input type="text" id="nom_user" name="nom_user" required>
+    <br>
+    <label for="ap_user">Apellido Paterno:</label><br>
+    <input type="text" id="ap_user" name="ap_user" required><br>
+    <label for="am_user">Apellido Materno:</label><br>
+    <input type="text" id="am_user" name="am_user" required><br>
+    <label for="email_user">Correo electrónico:</label><br>
+    <input type="email" id="email_user" name="email_user" required><br>
+    <label for="password_user">Contraseña:</label><br>
+    <input type="password" id="password_user" name="password_user" required><br>
+    <label for="telefono">Teléfono:</label><br>
+    <input type="tel" id="telefono" name="telefono"  pattern="[0-9]*"><br>
+  
+    <input type="submit" value="Crear Cuenta" class="boton">
+
+</form>
+    <!-- Sign In With Google button with HTML data attributes API -->
+    <div id="g_id_onload"
+    data-client_id="331280763910-o7unrv7m1evbb0t7nr4p25bfel8a682e.apps.googleusercontent.com"
+    data-context="signin"
+    data-ux_mode="popup"
+    data-callback="handleCredentialResponse"
+    data-auto_prompt="false">
+    </div>
+    
+    <div class="g_id_signin"
+    data-type="standard"
+    data-shape="rectangular"
+    data-theme="outline"
+    data-text="signin_with"
+    data-size="large"
+    data-logo_alignment="left">
+    </div>
+    
+    <!-- Display the user's profile info -->
+    <div class="pro-data hidden"></div>
+    
+    
+
+<div class="acciones">
+    <a href="/auth/login">¿Ya tienes una cuenta? Inicia Sesión</a>
+    <a href="/olvide">¿Olvidaste tu password?</a>
+</div>
+<script>
+    document.getElementById('telefono').addEventListener('input', function(event) {
+        const input = event.target;
+        input.value = input.value.replace(/[^0-9]/g, '');
+    });
+    </script>
+<script>
+    // Credential response handler function
+    function handleCredentialResponse(response){
+        // Post JWT token to server-side
+        fetch("auth_init.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ request_type:'user_auth', credential: response.credential }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status == 1){
+                let responsePayload = data.pdata;
+    
+                // Display the user account data
+                let profileHTML = '<h3>Welcome '+responsePayload.given_name+'! <a href="javascript:void(0);" onclick="signOut('+responsePayload.sub+');">Sign out</a></h3>';
+                profileHTML += '<img src="'+responsePayload.picture+'"/><p><b>Auth ID: </b>'+responsePayload.sub+'</p><p><b>Name: </b>'+responsePayload.name+'</p><p><b>Email: </b>'+responsePayload.email+'</p>';
+                document.getElementsByClassName("pro-data")[0].innerHTML = profileHTML;
+                
+                document.querySelector("#btnWrap").classList.add("hidden");
+                document.querySelector(".pro-data").classList.remove("hidden");
+            }
+        })
+        .catch(console.error);
+    }
+    
+    // Sign out the user
+    function signOut(authID) {
+        document.getElementsByClassName("pro-data")[0].innerHTML = '';
+        document.querySelector("#btnWrap").classList.remove("hidden");
+        document.querySelector(".pro-data").classList.add("hidden");
+    }    
+    </script>
+    
+<script src="https://accounts.google.com/gsi/client" async></script>
+    
+    <script src="index.ejs"></script>
+</body>
+</html>

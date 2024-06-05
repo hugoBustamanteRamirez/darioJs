@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classes</title>
+    
+    <style>
+        /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Talleres</h1>
+    <a href="/auth/logout">Cerrar sesión</a>
+    <a href="/auth/index">Volver al inico</a>
+    <a href="/adquirir/index">My courses </a>
+    <a href="/adquirir/Tranferphoto">See QR payment </a>
+
+    <div>
+       
+        <% classes.forEach(function(classItem,index) { %>
+            <div>
+            <strong>Course Name:</strong> <%= classItem.nom_class %><br>
+            <strong>Description:</strong> <%= classItem.desc_class %><br>
+            <strong>Price:</strong> <%= classItem.price_class %><br>
+            <strong>Total hours:</strong> <%= classItem.duracion_class %><br>
+            <strong>Start date:</strong> <%= classItem.finicio_class %><br>
+            <strong>Ends:</strong> <%= classItem.ffin_class %><br>
+            <strong>Modalidad :</strong> <%= classItem. modalidad_class %><br>
+
+                
+
+                <button class="buy-btn">Comprar Curso</button>
+            </div>
+        
+            <!-- Modal para el curso -->
+            <div class="modal">
+                <div class="modal-content">
+                    <form action="/adquirir" method="post">
+                    <span class="close">&times;</span>
+                    <!-- Contenido del modal: opciones de pago, detalles del curso, etc. -->
+                    <h4>Chose pay method for <%= classItem.nom_class %></h4>
+                    <p>Price: <%= classItem.price_class %></p>
+                    <!-- Opciones de pago -->
+                    <input type="hidden" name="cve_class" value="<%= classItem.cve_class %>">
+                    
+
+                    <label for="metodo_pago<%= index %>">Seleccione un método de pago:</label>
+                    <select name="metodo_pago">
+                        <option value="paypal">Paypal</option>
+                        <option value="cash">Cash</option>
+                        <option value="transfer">Transfer</option>
+                    </select>
+                    
+                   <a href="/adquirir"> <input type="submit" value="Continuar"></a>
+                </form>
+                </div>
+            </div>
+        <% }); %>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var buyButtons = document.querySelectorAll('.buy-btn');
+                var modals = document.querySelectorAll('.modal');
+                var closeButtons = document.querySelectorAll('.close');
+        
+                buyButtons.forEach(function(button, index) {
+                    button.addEventListener('click', function() {
+                        modals[index].style.display = "block";
+                    });
+                });
+        
+                closeButtons.forEach(function(closeButton) {
+                    closeButton.addEventListener('click', function() {
+                        modals.forEach(function(modal) {
+                            modal.style.display = "none";
+                        });
+                    });
+                });
+            });
+        </script>
+    
+</body>
+</html>

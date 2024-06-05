@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+   
+    <a href="/auth/logout">Log out</a>
+    <a href="/auth/index">Back to menu</a>
+    
+    <a href="/adquirir/Tranferphoto">See QR payment </a>
+    
+
+    
+    <h1>Mis inscripciones</h1>
+
+  <% if (inscripciones.length > 0) { %>
+    <table border="1px">
+      <thead>
+        <tr>
+          <th>User name</th>
+         <th>Type</th>
+          <th>Class name</th>
+          <th>Price</th>
+          <th>Payment-Method</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (const inscripcion of inscripciones) { %>
+        <tr>
+          <td><%= inscripcion.nombre_usuario %></td>
+          <td><%= inscripcion.type %></td>
+          
+          <td><%= inscripcion.nombre_clase %></td>
+          <td><%= inscripcion.precio_clase %></td>
+          <td><%= inscripcion.metodo_pago %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No tienes ninguna inscripción registrada.</p>
+  <% } %>
+</body>
+</html>
